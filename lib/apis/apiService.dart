@@ -23,4 +23,53 @@ class ApiServices {
     }
     return meetingModel.future;
   }
+
+  
+  static Future<dynamic> postLoginToInsertFCM(
+      String userId, String fcnToken) async {
+    //12c9cd48-8cb7-4145-8fd9-323e20b329dd
+    try {
+      Map<String, String> headers = {"Content-type": "application/json"};
+      var response = await http.post(
+        Uri.parse(
+          '${baseURL}/login?userId=${userId}&token=${fcnToken}',
+        ),
+        headers: headers,
+      );
+      print(response.statusCode);
+      if (response.statusCode == 200) {
+        String body = response.body;
+
+        return body;
+      } else if (response.statusCode == 404 || response.statusCode == 409) {
+        return null;
+      }
+    } catch (e) {
+      print('Error with status code: ${e}');
+    }
+  }
+
+  static Future<dynamic> postLogoutToInsertFCM(
+      String userId, String fcnToken) async {
+    //12c9cd48-8cb7-4145-8fd9-323e20b329dd
+    try {
+      Map<String, String> headers = {"Content-type": "application/json"};
+      var response = await http.post(
+        Uri.parse(
+          '${baseURL}/logout?userId=${userId}&token=${fcnToken}',
+        ),
+        headers: headers,
+      );
+      print(response.statusCode);
+      if (response.statusCode == 204) {
+        String body = response.body;
+
+        return body;
+      } else if (response.statusCode == 404 || response.statusCode == 409) {
+        return null;
+      }
+    } catch (e) {
+      print('Error with status code: ${e}');
+    }
+  }
 }
