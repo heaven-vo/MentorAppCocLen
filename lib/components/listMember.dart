@@ -27,7 +27,7 @@ class _ListMember extends State<ListMember> {
             child: Title(
                 color: Colors.black,
                 child: Text(
-                  "Thành viên (3/5)",
+                  "Thành viên (1/5)",
                   style: TextStyle(
                       fontFamily: 'Roboto',
                       fontSize: 18,
@@ -47,7 +47,8 @@ class _ListMember extends State<ListMember> {
                   majorName: item["majorName"],
                   memberName: item["name"],
                   image: item["image"],
-                  isBorderBottom: index == widget.members.length - 1 ? false : true);
+                  isBorderBottom:
+                      index == widget.members.length - 1 ? false : true);
             }).toList()),
           )
         ]));

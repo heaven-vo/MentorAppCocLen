@@ -28,12 +28,12 @@ class _MeetupItem extends State<MeetupItem> {
       // padding: EdgeInsets.all(10),
       child: InkWell(
         onTap: () => {
-          Navigator.of(context)
-              .pushNamed('/meetup-detail', arguments: "23144f6a-75dd-4c46-92b1-b37ca7f21465")
+          Navigator.of(context).pushNamed('/meetup-detail',
+              arguments: "23144f6a-75dd-4c46-92b1-b37ca7f21465")
         },
         child: Stack(
           children: [
-            Positioned(
+            /* Positioned(
               right: 0,
               child: Container(
                   decoration: BoxDecoration(
@@ -52,7 +52,7 @@ class _MeetupItem extends State<MeetupItem> {
                     ],
                   ),
                   padding: const EdgeInsets.only(
-                      top: 12, bottom: 12, right: 17, left: 17),
+                      top: 8, bottom: 8, right: 17, left: 17),
                   child: Text(
                     "Góp mặt",
                     style: TextStyle(
@@ -61,7 +61,7 @@ class _MeetupItem extends State<MeetupItem> {
                         fontFamily: 'Roboto',
                         color: Colors.white),
                   )),
-            ),
+            ), */
             Container(
                 height: 220,
                 decoration: const BoxDecoration(),
@@ -100,10 +100,10 @@ class _MeetupItem extends State<MeetupItem> {
                                       fontFamily: 'Roboto',
                                     ),
                                   ),
-                                  Container(
+                                  /* Container(
                                     margin: EdgeInsets.only(top: 10),
                                     child: Text(
-                                      "Lúc: 07:00 - 09:00 (17/03/2022)",
+                                      "Lúc: 07:00 - 09:00 | 17/03/2022",
                                       maxLines: 2,
                                       style: const TextStyle(
                                         overflow: TextOverflow.ellipsis,
@@ -113,34 +113,111 @@ class _MeetupItem extends State<MeetupItem> {
                                         fontFamily: 'Roboto',
                                       ),
                                     ),
+                                  ), */
+                                  Row(
+                                    children: [
+                                      Container(
+                                        //padding: EdgeInsets.all(5),
+                                        child: Row(
+                                          children: <Widget>[
+                                            Container(
+                                                margin: const EdgeInsets.only(
+                                                    top: 5),
+                                                child: Row(
+                                                  children: <Widget>[
+                                                    Icon(
+                                                      Icons.access_alarms_sharp,
+                                                      color: Color.fromARGB(
+                                                          255, 7, 23, 172),
+                                                      size: 25,
+                                                    ),
+                                                    Text(
+                                                      " 07:00 - 09:00 | 17/03/2022",
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      style: TextStyle(
+                                                          color: Color.fromARGB(
+                                                              255, 7, 23, 172),
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                  ],
+                                                )),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  Container(
-                                    margin: EdgeInsets.only(top: 10),
-                                    child: Text(
-                                      "Mentor: Lâm Hữu Khánh Phương",
-                                      maxLines: 2,
-                                      style: const TextStyle(
-                                        overflow: TextOverflow.ellipsis,
-                                        color: Colors.black87,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w400,
-                                        fontFamily: 'Roboto',
+                                  Row(
+                                    children: [
+                                      Container(
+                                        //padding: EdgeInsets.all(5),
+                                        child: Row(
+                                          children: <Widget>[
+                                            Container(
+                                                margin: const EdgeInsets.only(
+                                                    top: 5),
+                                                child: Row(
+                                                  children: <Widget>[
+                                                    Icon(
+                                                      Icons
+                                                          .account_circle_rounded,
+                                                      color: Color.fromARGB(
+                                                          255, 7, 7, 7),
+                                                      size: 25,
+                                                    ),
+                                                    Text(
+                                                      " Lâm Hữu Khánh Phương",
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      style: TextStyle(
+                                                          color: Color.fromARGB(
+                                                              255, 0, 1, 7),
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          fontSize: 16),
+                                                    ),
+                                                  ],
+                                                )),
+                                          ],
+                                        ),
                                       ),
-                                    ),
+                                    ],
                                   ),
-                                  Container(
-                                    margin: EdgeInsets.only(top: 10),
-                                    child: Text(
-                                      "Tại: Moda Coffee",
-                                      maxLines: 2,
-                                      style: const TextStyle(
-                                        overflow: TextOverflow.ellipsis,
-                                        color: Colors.black87,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w400,
-                                        fontFamily: 'Roboto',
+                                  Row(
+                                    children: [
+                                      Container(
+                                        //padding: EdgeInsets.all(5),
+                                        child: Row(
+                                          children: <Widget>[
+                                            Container(
+                                                margin: const EdgeInsets.only(
+                                                    top: 5),
+                                                child: Row(
+                                                  children: <Widget>[
+                                                    Icon(
+                                                      Icons.coffee,
+                                                      color: Color.fromARGB(
+                                                          255, 7, 7, 7),
+                                                      size: 25,
+                                                    ),
+                                                    Text(
+                                                      " Moda Coffee",
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      style: TextStyle(
+                                                          color: Color.fromARGB(
+                                                              255, 0, 1, 7),
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          fontSize: 16),
+                                                    ),
+                                                  ],
+                                                )),
+                                          ],
+                                        ),
                                       ),
-                                    ),
+                                    ],
                                   ),
                                 ],
                               ),
@@ -160,7 +237,7 @@ class _MeetupItem extends State<MeetupItem> {
                     child: FlatButton(
                       height: 40,
                       child: Text(
-                        'Hủy bỏ',
+                        'Cancel',
                         style: TextStyle(
                             fontSize: 16.0,
                             fontFamily: "Roboto",

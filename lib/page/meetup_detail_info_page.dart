@@ -153,7 +153,7 @@ class MeetupDetailPage extends StatelessWidget {
                         Title(
                             color: Colors.black,
                             child: Text(
-                              '${meetingInfo.price} VND / buổi',
+                              '${meetingInfo.price}00 VND / buổi',
                               style: TextStyle(
                                 fontSize: 16,
                                 fontFamily: "Roboto",
@@ -255,14 +255,14 @@ class MeetupDetailPage extends StatelessWidget {
             heightImg: 130,
             widthImg: 120,
             isButton: false),
-        Container(
+        /* Container(
           height: 50,
           color: Colors.white,
           padding: EdgeInsets.only(left: 5, right: 5, bottom: 10),
           width: MediaQuery.of(context).size.width,
           child: ElevatedButton(
             child: Text(
-              "Chấp nhận",
+              "Chấp nhận",
               style: TextStyle(fontFamily: "Roboto", fontSize: 16),
             ),
             style: ElevatedButton.styleFrom(
@@ -275,7 +275,7 @@ class MeetupDetailPage extends StatelessWidget {
             ),
             onPressed: () => {},
           ),
-        )
+        ) */
       ]),
     ));
   }

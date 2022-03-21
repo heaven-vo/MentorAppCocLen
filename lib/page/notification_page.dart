@@ -98,7 +98,7 @@ class _NoficationPage extends State<NoficationPage> {
                           text: "Meetup của bạn đã được giảng viên ",
                           children: [
                             TextSpan(
-                                text: "Phạm Văn Dương",
+                                text: "Lâm Hữu Khánh Phương",
                                 style: TextStyle(
                                     fontWeight: FontWeight.w600,
                                     color: MaterialColors.primary)),
