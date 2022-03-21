@@ -1,16 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../components/meetupItem.dart';
 import '../constants.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class RequestMeetup extends StatefulWidget {
+  const RequestMeetup({Key? key}) : super(key: key);
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<RequestMeetup> createState() => _RequestMeetup();
 }
 
-class _HomePageState extends State<HomePage> {
+class _RequestMeetup extends State<RequestMeetup> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,29 +36,13 @@ class _HomePageState extends State<HomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
-                          margin: EdgeInsets.only(top: 0),
+                          margin: EdgeInsets.only(left: 165),
                           child: Row(children: [
-                            Container(
-                              width: 75,
-                              height: 50,
-                              child: Image.asset(
-                                'assets/coctrensach5.png',
-                                fit: BoxFit.cover,
-                              ),
-                            ),
                             Text(
-                              "Cóc ",
+                              "Lời mời",
                               style: TextStyle(
-                                  fontFamily: "Roboto",
-                                  fontSize: 22,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w700),
-                            ),
-                            Text(
-                              "Lên",
-                              style: TextStyle(
-                                  fontFamily: "Roboto",
-                                  fontSize: 22,
+                                  //fontFamily: "Roboto",
+                                  fontSize: 20,
                                   color: Colors.white,
                                   fontWeight: FontWeight.w700),
                             ),
@@ -74,7 +59,7 @@ class _HomePageState extends State<HomePage> {
                               child: Icon(
                                 Icons.notifications,
                                 color: Colors.white,
-                                size: 32,
+                                size: 28,
                               )),
                         )
                       ],
@@ -84,6 +69,11 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
           ))),
+      body: ListView(
+        children: [
+          MeetupItem(),
+        ],
+      ),
     );
   }
 }

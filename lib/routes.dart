@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mentor_coclen/main.dart';
 import 'package:mentor_coclen/page/app.dart';
-import 'package:mentor_coclen/page/home_page.dart';
+import 'package:mentor_coclen/page/meetup_accept.dart';
 import 'package:mentor_coclen/page/login_page.dart';
 import 'package:mentor_coclen/page/meetup_detail_info_page.dart';
 import 'package:mentor_coclen/page/meetup_detail_main_page.dart';

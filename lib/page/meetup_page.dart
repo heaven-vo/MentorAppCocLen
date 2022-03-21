@@ -9,7 +9,10 @@ class MySessionPage extends StatelessWidget {
     return Container(
       child: ListView(children: [
         //MySessionPage(),
-        MeetupItem()
+        MeetupItem(),
+        /* MeetupItem(),
+        MeetupItem(),
+        MeetupItem(), */
       ]),
     );
   }

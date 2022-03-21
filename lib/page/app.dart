@@ -2,10 +2,14 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:http/http.dart';
 import 'package:mentor_coclen/page/acount_page.dart';
-import 'package:mentor_coclen/page/home_page.dart';
+import 'package:mentor_coclen/page/meetup_accept.dart';
 import 'package:mentor_coclen/page/menuFooter.dart';
 import 'package:mentor_coclen/page/profile_page.dart';
+import 'package:mentor_coclen/page/request_meetup.dart';
+
+import 'home_page.dart';
 
 class App extends StatefulWidget {
   @override
@@ -17,8 +21,8 @@ class AppState extends State<App> {
 
   final _navigatorKeys = {
     TabItem.home: GlobalKey<NavigatorState>(),
-    TabItem.mentor: GlobalKey<NavigatorState>(),
-    TabItem.search: GlobalKey<NavigatorState>(),
+    TabItem.assignment_rounded: GlobalKey<NavigatorState>(),
+    TabItem.assignment_turned_in_outlined: GlobalKey<NavigatorState>(),
     TabItem.account: GlobalKey<NavigatorState>(),
   };
 
@@ -39,8 +43,8 @@ class AppState extends State<App> {
   Widget build(BuildContext context) {
     List<Widget> _widgetOptions = <Widget>[
       HomePage(),
-      HomePage(),
-      HomePage(),
+      MEETUP_ACCEPT(),
+      RequestMeetup(),
       AccountPage()
     ];
 
@@ -80,18 +84,23 @@ class AppState extends State<App> {
   }
 }
 
-enum TabItem { home, mentor, search, account }
+enum TabItem {
+  home,
+  assignment_rounded,
+  assignment_turned_in_outlined,
+  account
+}
 
 const Map<TabItem, String> tabName = {
   TabItem.home: 'Trang chủ',
-  TabItem.mentor: 'Mentor',
-  TabItem.search: 'Tìm kiếm',
+  TabItem.assignment_rounded: 'Mentup',
+  TabItem.assignment_turned_in_outlined: 'Yêu Cầu',
   TabItem.account: 'Cài đặt',
 };
 
 const Map<TabItem, IconData> tabIcon = {
   TabItem.home: Icons.home,
-  TabItem.mentor: Icons.account_circle,
-  TabItem.search: Icons.search,
+  TabItem.assignment_rounded: Icons.assignment_rounded,
+  TabItem.assignment_turned_in_outlined: Icons.assignment_turned_in_outlined,
   TabItem.account: Icons.settings,
 };
