@@ -1,10 +1,12 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:mentor_coclen/apis/apiService.dart';
 import 'package:mentor_coclen/constants.dart';
 
 class LoginPage extends StatefulWidget {
@@ -25,6 +27,7 @@ class _LoginPage extends State<LoginPage> {
     super.initState();
   }
 
+  FirebaseFirestore db = FirebaseFirestore.instance;
   signIn() {
     String email = _email.text;
     String pass = _pass.text;
@@ -56,10 +59,27 @@ class _LoginPage extends State<LoginPage> {
             .then((value) async {
           if (value.user != null) {
             String? fcmToken = await messaging.getToken();
-            print("fcmToken: $fcmToken");
-            // Navigator.pop(context);
-            EasyLoading.dismiss();
-            Navigator.pushReplacementNamed(context, '/home');
+            print("fcmToken: ${fcmToken}");
+            User user = value.user!;
+
+            ApiServices.postLoginToInsertFCM(user.uid, fcmToken!)
+                .then((role) => {
+                      print("value: $role"),
+                      if (role != null)
+                        {
+                          if (role == "3")
+                            {
+                              db.collection("users").doc(user.uid).set({
+                                'email': user.email,
+                                'fcmToken': fcmToken,
+                              }),
+
+                              // Navigator.pop(context);
+                              EasyLoading.dismiss(),
+                              Navigator.pushReplacementNamed(context, '/home')
+                            }
+                        }
+                    });
           }
         }).catchError((onError) {
           EasyLoading.dismiss();

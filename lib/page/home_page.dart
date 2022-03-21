@@ -141,6 +141,7 @@ class _HomePage extends State<HomePage> {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
+<<<<<<< HEAD
         drawer: Drawer(
           child: ListView(
             padding: EdgeInsets.zero,
@@ -216,6 +217,8 @@ class _HomePage extends State<HomePage> {
             ],
           ),
         ),
+=======
+>>>>>>> cc30bc739eab8d6a89afa2012330bbce62de26cd
         appBar: AppBar(
           centerTitle: true,
           title: isSearch ? _buildSearchField() : _buildTitleAppbar(),
