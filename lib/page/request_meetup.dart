@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mentor_coclen/components/requestmeetup.dart';
 
 import '../components/meetupItem.dart';
 import '../constants.dart';
@@ -71,7 +72,7 @@ class _RequestMeetup extends State<RequestMeetup> {
           ))),
       body: ListView(
         children: [
-          MeetupItem(),
+          RequestMeetupItem(),
         ],
       ),
     );
