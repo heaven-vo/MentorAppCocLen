@@ -46,10 +46,10 @@ class MeetupModel {
 
   factory MeetupModel.fromJson(Map<String, dynamic> json) {
     return MeetupModel(
-      sessionId: json['sessionId'],
+      sessionId: json['sessionId'] == null ? json['id'] :json['sessionId'],
       mentorName: json['mentorName'],
       description: json['description'],
-      subject: json['subjectName'],
+      subject: json['subjectName'] == null ? json['sessionName'] : json['subjectName'],
       majorName: json['majorName'],
       majorId: json['majorId'],
       isJoin: json['isJoin'],
@@ -57,7 +57,7 @@ class MeetupModel {
       slot: json['slot'],
       date: json['date'],
       price: json['price'] == null ? 0.0 : json['price'].toDouble(),
-      image: json['subjectImage'],
+      image: json['subjectImage'] == null ? json['sessionImage'] : json['subjectImage'],
       cafeName: json['cafeName'],
       cafeStreet: json['cafeStreet'],
       cafeDistric: json['cafeDistric'],

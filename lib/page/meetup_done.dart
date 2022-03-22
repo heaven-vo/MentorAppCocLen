@@ -6,18 +6,18 @@ import 'package:mentor_coclen/components/meetupItem.dart';
 import 'package:mentor_coclen/model/meetup.dart';
 import 'package:skeletons/skeletons.dart';
 
-class MyMeetupPage extends StatefulWidget {
-  const MyMeetupPage({Key? key}) : super(key: key);
+class MyMeetupDonePage extends StatefulWidget {
+  const MyMeetupDonePage({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return _MyMeetupPage();
+    return _MyMeetupDonePage();
   }
 }
 
-class _MyMeetupPage extends State<MyMeetupPage>
-    with AutomaticKeepAliveClientMixin<MyMeetupPage> {
+class _MyMeetupDonePage extends State<MyMeetupDonePage>
+    with AutomaticKeepAliveClientMixin<MyMeetupDonePage> {
   @override
   bool get wantKeepAlive => true;
   bool isLoadingCircle = true;
@@ -26,14 +26,7 @@ class _MyMeetupPage extends State<MyMeetupPage>
   @override
   void initState() {
     super.initState();
-    getListmeetup();
-  }
-
-  getListmeetup() {
-    setState(() {
-        isLoadingCircle = true;
-    });
-    ApiServices.getListMeetingRecommendByStatus(auth.currentUser!.uid, 1, 1, 10)
+    ApiServices.getListMeetingRecommendByStatus(auth.currentUser!.uid, 2, 1, 10)
         .then((value) => {
               if (value != null)
                 {
@@ -76,11 +69,7 @@ class _MyMeetupPage extends State<MyMeetupPage>
         child: ListView(children: [
           if (listMeetup.isNotEmpty)
             ...listMeetup
-                .map((item) => MeetupItem(
-                      function: (v) {getListmeetup();},
-                      meetup: item,
-                      isCancelBtn: false,
-                    ))
+                .map((item) => MeetupItem(meetup: item, isCancelBtn: false, function: (v){},))
                 .toList()
           else ...[
             Container(

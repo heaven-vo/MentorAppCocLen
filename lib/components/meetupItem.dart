@@ -1,14 +1,194 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:mentor_coclen/apis/apiService.dart';
 import 'package:mentor_coclen/constants.dart';
+import 'package:mentor_coclen/model/meetup.dart';
+import 'package:mentor_coclen/utils.dart';
 
 class MeetupItem extends StatefulWidget {
-  const MeetupItem({Key? key}) : super(key: key);
+  MeetupModel meetup;
+  bool isCancelBtn;
+  ValueChanged<void> function;
+  MeetupItem(
+      {Key? key,
+      required this.meetup,
+      required this.function,
+      required this.isCancelBtn})
+      : super(key: key);
 
   @override
   State<MeetupItem> createState() => _MeetupItem();
 }
 
 class _MeetupItem extends State<MeetupItem> {
+  FirebaseAuth auth = FirebaseAuth.instance;
+
+  cancelRequest() {
+    EasyLoading.show(
+      status: 'loading...',
+      maskType: EasyLoadingMaskType.clear,
+    );
+    ApiServices.putCancelMeetupRequest(
+            widget.meetup.sessionId!, auth.currentUser!.uid)
+        .then((value) => {
+              if (value != null)
+                {
+                  print(value),
+                  EasyLoading.dismiss(),
+                  widget.function(""),
+                }
+              else
+                {EasyLoading.dismiss(), widget.function("")}
+            });
+
+    // EasyLoading.dismiss();
+  }
+
+  int val = -1;
+
+  dialogCancel() {
+    return showDialog(
+        context: context,
+        builder: (build) {
+          return StatefulBuilder(builder: (context, setState) {
+            return AlertDialog(
+              title: Text("Hủy Meetup", textAlign: TextAlign.center),
+              content: SingleChildScrollView(
+                child: Column(children: [
+                  ListTile(
+                    title: Text("Có việc bận đột xuất!"),
+                    leading: Radio(
+                      value: 1,
+                      groupValue: val,
+                      onChanged: (value) {
+                        setState(() {
+                          val = int.parse(value.toString());
+                        });
+                      },
+                      activeColor: Colors.green,
+                    ),
+                  ),
+                  ListTile(
+                    title: Text("Thành viên trong nhóm quá ít!"),
+                    leading: Radio(
+                      value: 2,
+                      groupValue: val,
+                      onChanged: (value) {
+                        setState(() {
+                          val = int.parse(value.toString());
+                        });
+                      },
+                      activeColor: Colors.green,
+                    ),
+                  ),
+                  ListTile(
+                    title: Text("Lý do khác:"),
+                    leading: Radio(
+                      value: 3,
+                      groupValue: val,
+                      onChanged: (value) {
+                        setState(() {
+                          val = int.parse(value.toString());
+                        });
+                      },
+                      activeColor: Colors.green,
+                    ),
+                  ),
+                  if (val == 3) ...[
+                    Container(
+                        height: 100,
+                        child: Card(
+                            color: Colors.white60,
+                            child: Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: TextField(
+                                maxLines: 8,
+                                onChanged: (value) {
+                                  setState(() {});
+                                },
+                                decoration: InputDecoration.collapsed(
+                                    hintStyle: TextStyle(
+                                        fontFamily: "Roboto",
+                                        fontSize: 14,
+                                        color: Colors.black.withOpacity(0.4)),
+                                    hintText: "Nhập lý do của bạn."),
+                              ),
+                            )))
+                  ]
+                ]),
+              ),
+              actions: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    FlatButton(
+                        height: 40,
+                        color: MaterialColors.primary,
+                        onPressed: () {
+                          Navigator.pop(build);
+                          EasyLoading.show(
+                            status: 'loading...',
+                            maskType: EasyLoadingMaskType.clear,
+                          );
+
+                          cancelRequest();
+                        },
+                        shape: RoundedRectangleBorder(
+                          side: BorderSide(
+                              color: MaterialColors.primary, width: 1),
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: Text(
+                          "   Xác nhận  ",
+                          style: TextStyle(
+                              fontSize: 16.0,
+                              fontFamily: "Roboto",
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500),
+                        )),
+                    SizedBox(
+                      width: 30,
+                    ),
+                    FlatButton(
+                        height: 40,
+                        shape: RoundedRectangleBorder(
+                          side: BorderSide(
+                              color: MaterialColors.primary, width: 1),
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        color: Colors.white,
+                        onPressed: () {
+                          Navigator.pop(build);
+                        },
+                        child: Text(
+                          "    Hủy bỏ     ",
+                          style: TextStyle(
+                              fontSize: 16.0,
+                              fontFamily: "Roboto",
+                              color: MaterialColors.primary,
+                              fontWeight: FontWeight.w500),
+                        ))
+                  ],
+                )
+              ],
+            );
+          });
+        });
+  }
+
+  acceptRequest() {
+    EasyLoading.show(
+      status: 'loading...',
+      maskType: EasyLoadingMaskType.clear,
+    );
+    ApiServices.putAcceptMeetupRequest(
+            widget.meetup.sessionId!, auth.currentUser!.uid)
+        .then((value) => {
+              if (value != null) {EasyLoading.dismiss(), widget.function("")}
+            });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -28,8 +208,8 @@ class _MeetupItem extends State<MeetupItem> {
       // padding: EdgeInsets.all(10),
       child: InkWell(
         onTap: () => {
-          Navigator.of(context).pushNamed('/meetup-detail',
-              arguments: "23144f6a-75dd-4c46-92b1-b37ca7f21465")
+          Navigator.of(context)
+              .pushNamed('/meetup-detail', arguments: widget.meetup.sessionId)
         },
         child: Stack(
           children: [
@@ -63,7 +243,7 @@ class _MeetupItem extends State<MeetupItem> {
                   )),
             ), */
             Container(
-                height: 220,
+                height: 210,
                 decoration: const BoxDecoration(),
                 margin: const EdgeInsets.only(left: 10, right: 10, top: 0),
                 child: ListView(
@@ -79,20 +259,20 @@ class _MeetupItem extends State<MeetupItem> {
                                     const EdgeInsets.only(top: 20, right: 15),
                                 child: CircleAvatar(
                                   radius: 45, // Image radius
-                                  backgroundImage: NetworkImage(
-                                      "https://firebasestorage.googleapis.com/v0/b/twe-mobile.appspot.com/o/subject%2Flambanner-ky-thuat-thiet-ke-banner-1024x527.png?alt=media&token=35f11e4c-c1cd-49d8-9067-b1a712bc520f"),
+                                  backgroundImage:
+                                      NetworkImage(widget.meetup.image!),
                                 ))),
                         Expanded(
                             flex: 3,
                             child: Container(
                               padding:
-                                  const EdgeInsets.only(top: 30, right: 15),
+                                  const EdgeInsets.only(top: 20, right: 15),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
                                   Text(
-                                    "Clean Code",
+                                    widget.meetup.subject!,
                                     style: const TextStyle(
                                       color: Colors.black,
                                       fontSize: 18,
@@ -117,7 +297,7 @@ class _MeetupItem extends State<MeetupItem> {
                                   Row(
                                     children: [
                                       Container(
-                                        //padding: EdgeInsets.all(5),
+                                        padding: EdgeInsets.only(top: 5),
                                         child: Row(
                                           children: <Widget>[
                                             Container(
@@ -132,12 +312,36 @@ class _MeetupItem extends State<MeetupItem> {
                                                       size: 25,
                                                     ),
                                                     Text(
-                                                      " 07:00 - 09:00 | 17/03/2022",
+                                                      " ${getSlot(widget.meetup.slot!)}",
                                                       overflow:
                                                           TextOverflow.ellipsis,
                                                       style: TextStyle(
                                                           color: Color.fromARGB(
                                                               255, 7, 23, 172),
+                                                          fontFamily: "Roboto",
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    Icon(
+                                                      Icons.calendar_month,
+                                                      color: Color.fromARGB(
+                                                          255, 7, 23, 172),
+                                                      size: 25,
+                                                    ),
+                                                    SizedBox(
+                                                      width: 5,
+                                                    ),
+                                                    Text(
+                                                      "${widget.meetup.date!}",
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      style: TextStyle(
+                                                          color: Color.fromARGB(
+                                                              255, 7, 23, 172),
+                                                          fontFamily: "Roboto",
                                                           fontWeight:
                                                               FontWeight.bold),
                                                     ),
@@ -198,16 +402,17 @@ class _MeetupItem extends State<MeetupItem> {
                                                     Icon(
                                                       Icons.coffee,
                                                       color: Color.fromARGB(
-                                                          255, 7, 7, 7),
+                                                          255, 0, 1, 7),
                                                       size: 25,
                                                     ),
                                                     Text(
-                                                      " Moda Coffee",
+                                                      " ${widget.meetup.cafeName}",
                                                       overflow:
                                                           TextOverflow.ellipsis,
                                                       style: TextStyle(
                                                           color: Color.fromARGB(
                                                               255, 0, 1, 7),
+                                                          fontFamily: "Roboto",
                                                           fontWeight:
                                                               FontWeight.w400,
                                                           fontSize: 16),
@@ -226,56 +431,90 @@ class _MeetupItem extends State<MeetupItem> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                     ),
+                    Container(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          if (widget.isCancelBtn) ...[
+                            Container(
+                              width:
+                                  MediaQuery.of(context).size.width * .5 - 30,
+                              padding: EdgeInsets.only(top: 20, left: 0),
+                              child: FlatButton(
+                                height: 40,
+                                child: Text(
+                                  'Hủy bỏ',
+                                  style: TextStyle(
+                                      fontSize: 16.0,
+                                      fontFamily: "Roboto",
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  side: BorderSide(
+                                      color: MaterialColors.primary, width: 1),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                color: Colors.white,
+                                textColor: MaterialColors.primary,
+                                onPressed: () {
+                                  dialogCancel();
+                                },
+                              ),
+                            ),
+                            Container(
+                              width:
+                                  MediaQuery.of(context).size.width * .5 - 30,
+                              padding: EdgeInsets.only(top: 20, left: 0),
+                              child: FlatButton(
+                                height: 40,
+                                child: Text(
+                                  'Chấp nhận',
+                                  style: TextStyle(
+                                      fontSize: 16.0,
+                                      fontFamily: "Roboto",
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                color: MaterialColors.primary,
+                                textColor: Colors.white,
+                                onPressed: () {
+                                  acceptRequest();
+                                },
+                              ),
+                            ),
+                          ] else ...[
+                            Container(
+                              width: MediaQuery.of(context).size.width - 50,
+                              padding: EdgeInsets.only(top: 20, left: 0),
+                              child: FlatButton(
+                                height: 40,
+                                child: Text(
+                                  'Xem chi tiết',
+                                  style: TextStyle(
+                                      fontSize: 16.0,
+                                      fontFamily: "Roboto",
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                color: MaterialColors.primary,
+                                textColor: Colors.white,
+                                onPressed: () {
+                                  Navigator.pushNamed(context, "/meetup-detail",
+                                      arguments: widget.meetup.sessionId);
+                                },
+                              ),
+                            ),
+                          ]
+                        ],
+                      ),
+                    )
                   ],
                 )),
-            Container(
-              child: Row(
-                children: [
-                  Container(
-                    width: MediaQuery.of(context).size.width * .5 - 20,
-                    padding: EdgeInsets.only(top: 160, left: 10),
-                    child: FlatButton(
-                      height: 40,
-                      child: Text(
-                        'Cancel',
-                        style: TextStyle(
-                            fontSize: 16.0,
-                            fontFamily: "Roboto",
-                            fontWeight: FontWeight.w500),
-                      ),
-                      shape: RoundedRectangleBorder(
-                        side:
-                            BorderSide(color: MaterialColors.primary, width: 1),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      color: Colors.white,
-                      textColor: MaterialColors.primary,
-                      onPressed: () {},
-                    ),
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width * .5 - 20,
-                    padding: EdgeInsets.only(top: 160, left: 10),
-                    child: FlatButton(
-                      height: 40,
-                      child: Text(
-                        'Xem chi tiết',
-                        style: TextStyle(
-                            fontSize: 16.0,
-                            fontFamily: "Roboto",
-                            fontWeight: FontWeight.w500),
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      color: MaterialColors.primary,
-                      textColor: Colors.white,
-                      onPressed: () {},
-                    ),
-                  ),
-                ],
-              ),
-            )
           ],
         ),
       ),

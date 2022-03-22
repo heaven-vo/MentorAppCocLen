@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:mentor_coclen/constants.dart';
 import 'package:mentor_coclen/model/pushNotification.dart';
+import 'package:mentor_coclen/page/meetup_done.dart';
 import 'package:mentor_coclen/page/meetup_page.dart';
 
 class MEETUP_ACCEPT extends StatefulWidget {
@@ -39,56 +40,8 @@ class _MEETUP_ACCEPT extends State<MEETUP_ACCEPT> {
   final _controller = TextEditingController();
   String inputText = "";
   bool isSearch = false;
-  FirebaseMessaging messaging = FirebaseMessaging.instance;
-  PushNotificationModel? _notificationInfo;
-  late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
   FirebaseAuth auth = FirebaseAuth.instance;
   String email = "";
-
-  void registerNotification() async {
-    await Firebase.initializeApp();
-    messaging = FirebaseMessaging.instance;
-
-    NotificationSettings settings = await messaging.requestPermission(
-        alert: true, badge: true, provisional: false, sound: true);
-    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-        print("on app");
-        PushNotificationModel notification = PushNotificationModel(
-            title: message.notification!.title,
-            body: message.notification!.body,
-            dataTitle: message.data['title'],
-            dataBody: message.data['body']);
-
-        setState(() {
-          _notificationInfo = notification;
-        });
-        print("body: ${notification.body}");
-        print("title: ${notification.title}");
-        if (notification != null) {
-          print("thanh cong");
-          _showNotification(
-              _notificationInfo!.title!, _notificationInfo!.body!);
-        }
-      });
-    } else {
-      print("not permission");
-    }
-  }
-
-  Future<void> _showNotification(String title, String content) async {
-    const AndroidNotificationDetails androidPlatformChannelSpecifics =
-        AndroidNotificationDetails('your channel id', 'your channel name',
-            channelDescription: 'your channel description',
-            importance: Importance.max,
-            priority: Priority.high,
-            ticker: 'ticker');
-    const NotificationDetails platformChannelSpecifics =
-        NotificationDetails(android: androidPlatformChannelSpecifics);
-    await flutterLocalNotificationsPlugin
-        .show(0, title, content, platformChannelSpecifics, payload: 'item x');
-  }
-
   Widget _buildSearchField() {
     return TextField(
       autofocus: true,
@@ -124,16 +77,7 @@ class _MEETUP_ACCEPT extends State<MEETUP_ACCEPT> {
         email = mail!;
       });
     }
-    var initializationSettingsAndroid =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
-    var initializationSettingsIOS = IOSInitializationSettings();
-    var initializationSettings = InitializationSettings(
-        android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
 
-    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-    flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onSelectNotification: (value) {});
-    registerNotification();
     super.initState();
   }
 
@@ -199,7 +143,7 @@ class _MEETUP_ACCEPT extends State<MEETUP_ACCEPT> {
           ],
         ),
         body: TabBarView(
-            children: [MySessionPage(), /* Container(), */ Container()]),
+            children: [MyMeetupPage(), /* Container(), */ MyMeetupDonePage()]),
       ),
     );
   }

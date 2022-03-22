@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mentor_coclen/apis/apiService.dart';
 import 'package:mentor_coclen/components/help.dart';
+import 'package:mentor_coclen/model/mentor.dart';
 
 import '../components/categoryCart.dart';
 import '../constants.dart';
@@ -13,6 +16,30 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  String image = '';
+  String name = '';
+  FirebaseAuth auth = FirebaseAuth.instance;
+  getProfileByUsername(String username) {
+    MentorModel user;
+    ApiServices.getProfileByUsername(username).then((value) => {
+          if (value != null)
+            {
+              setState(() {
+                user = value;
+                name = user.fullname.toString();
+                image = user.image.toString();
+              })
+            }
+        });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getProfileByUsername(auth.currentUser!.uid);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +62,7 @@ class _HomePageState extends State<HomePage> {
                             child: CircleAvatar(
                               radius: 45, // Image radius
                               backgroundImage: NetworkImage(
-                                  "https://firebasestorage.googleapis.com/v0/b/twe-mobile.appspot.com/o/mentor%2Fimage_2022-03-18_131220.png?alt=media&token=50709d02-8cdd-4353-a8cb-713d6ab0b5d4"),
+                                 image),
                             ))),
                     Expanded(
                         flex: 3,
@@ -86,7 +113,7 @@ class _HomePageState extends State<HomePage> {
                                             child: Row(
                                               children: <Widget>[
                                                 Text(
-                                                  " Lâm Hữu Khánh Phương",
+                                                  " ${name}",
                                                   overflow:
                                                       TextOverflow.ellipsis,
                                                   style: TextStyle(
@@ -118,6 +145,7 @@ class _HomePageState extends State<HomePage> {
                         color: Color.fromARGB(255, 231, 218, 218),
                         borderRadius: BorderRadius.circular(10),
                       ),
+                      padding: EdgeInsets.only(bottom: 10),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -126,7 +154,7 @@ class _HomePageState extends State<HomePage> {
                           Row(
                             children: [
                               Container(
-                                padding: EdgeInsets.all(5),
+                                padding: EdgeInsets.all(10),
                                 child: Row(
                                   children: <Widget>[
                                     Container(
@@ -195,72 +223,85 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
+              margin: EdgeInsets.only(top: 15),
               decoration: BoxDecoration(
                 color: Color.fromARGB(255, 255, 255, 255),
                 borderRadius: BorderRadius.circular(45),
               ),
-              child: Row(
+              child: Stack(
                 children: [
-                  //Padding(padding: EdgeInsets.all(10)),
-
                   Container(
                     padding: EdgeInsets.only(
-                        top: 20, bottom: 20, left: 20, right: 5),
+                        top: 20, bottom: 20, left: 20, right: 20),
                     child: Icon(
                       Icons.assignment_turned_in_rounded,
-                      color: Color.fromARGB(255, 52, 187, 108),
-                      size: 90,
+                      color: MaterialColors.primary,
+                      size: 80,
                     ),
                   ),
-                  Container(
-                    padding: EdgeInsets.only(bottom: 70),
-                    child: Text(
-                      "3",
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                          fontSize: 18,
-                          color: Color.fromARGB(255, 207, 11, 11),
-                          fontWeight: FontWeight.w700),
+                  Positioned(
+                    right: 0,
+                    child: Container(
+                      height: 35,
+                      width: 35,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          color: MaterialColors.primary,
+                          borderRadius: BorderRadius.circular(50)),
+                      padding: EdgeInsets.only(bottom: 0),
+                      child: Text(
+                        "3",
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700),
+                      ),
                     ),
-                  ),
+                  )
                 ],
               ),
             ),
-            Container(
-              child: Text("                     "),
+            SizedBox(
+              width: 50,
             ),
             Container(
+              margin: EdgeInsets.only(top: 15),
               decoration: BoxDecoration(
                 color: Color.fromARGB(255, 255, 255, 255),
                 borderRadius: BorderRadius.circular(45),
               ),
-              child: Column(
+              child: Stack(
                 children: [
-                  //Padding(padding: EdgeInsets.all(10)),
-                  Row(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.only(
-                            top: 20, bottom: 20, left: 20, right: 5),
-                        child: Icon(
-                          Icons.assignment_rounded,
-                          color: Color.fromARGB(255, 52, 187, 108),
-                          size: 90,
-                        ),
-                      ),
-                      Container(
-                        padding: EdgeInsets.only(bottom: 70),
-                        child: Text(
-                          "3",
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                              fontSize: 18,
-                              color: Color.fromARGB(255, 207, 11, 11),
-                              fontWeight: FontWeight.w700),
-                        ),
-                      ),
-                    ],
+                  Container(
+                    padding: EdgeInsets.only(
+                        top: 20, bottom: 20, left: 20, right: 20),
+                    child: Icon(
+                      Icons.assignment_rounded,
+                      color: MaterialColors.primary,
+                      size: 80,
+                    ),
                   ),
+                  Positioned(
+                    right: 0,
+                    child: Container(
+                      height: 35,
+                      width: 35,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          color: MaterialColors.primary,
+                          borderRadius: BorderRadius.circular(50)),
+                      padding: EdgeInsets.only(bottom: 0),
+                      child: Text(
+                        "3",
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700),
+                      ),
+                    ),
+                  )
                 ],
               ),
             ),
@@ -276,12 +317,13 @@ class _HomePageState extends State<HomePage> {
                   //Padding(padding: EdgeInsets.all(10)),
 
                   Container(
-                    padding: EdgeInsets.only(top: 5),
+                    padding: EdgeInsets.only(top: 10),
                     child: Text(
                       "Yêu Cầu",
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                           fontSize: 18,
+                          fontFamily: "Roboto",
                           color: Colors.black,
                           fontWeight: FontWeight.w500),
                     ),
@@ -289,8 +331,8 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-            Container(
-              child: Text("                                      "),
+            SizedBox(
+              width: 100,
             ),
             Container(
               child: Column(
@@ -299,12 +341,13 @@ class _HomePageState extends State<HomePage> {
                   Column(
                     children: [
                       Container(
-                        padding: EdgeInsets.only(top: 5),
+                        padding: EdgeInsets.only(top: 10),
                         child: Text(
                           "Lịch hẹn",
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                               fontSize: 18,
+                              fontFamily: "Roboto",
                               color: Colors.black,
                               fontWeight: FontWeight.w500),
                         ),
@@ -323,6 +366,7 @@ class _HomePageState extends State<HomePage> {
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
                 fontSize: 20,
+                fontFamily: "Roboto",
                 //color: Color.fromARGB(255, 71, 73, 72),
                 fontWeight: FontWeight.w600),
           ),
@@ -338,7 +382,7 @@ class _HomePageState extends State<HomePage> {
                       child: Container(
                           padding: const EdgeInsets.only(top: 20, bottom: 15),
                           child: CircleAvatar(
-                            radius: 65, // Image radius
+                            radius: 60, // Image radius
                             backgroundImage: NetworkImage(
                                 "https://firebasestorage.googleapis.com/v0/b/twe-mobile.appspot.com/o/subject%2FCap1ture.PNG?alt=media&token=f4d66bd7-9fbf-4d0e-87cd-3af1faa4f7e2"),
                           ))),
@@ -347,7 +391,7 @@ class _HomePageState extends State<HomePage> {
                       child: Container(
                           padding: const EdgeInsets.only(top: 20, bottom: 15),
                           child: CircleAvatar(
-                            radius: 65, // Image radius
+                            radius: 60, // Image radius
                             backgroundImage: NetworkImage(
                                 "https://firebasestorage.googleapis.com/v0/b/twe-mobile.appspot.com/o/subject%2Fimages.png?alt=media&token=4f1be2cb-90d4-459b-831d-2233751a70cb"),
                           ))),
@@ -356,7 +400,7 @@ class _HomePageState extends State<HomePage> {
                       child: Container(
                           padding: const EdgeInsets.only(top: 20, bottom: 15),
                           child: CircleAvatar(
-                            radius: 65, // Image radius
+                            radius: 60, // Image radius
                             backgroundImage: NetworkImage(
                                 "https://firebasestorage.googleapis.com/v0/b/twe-mobile.appspot.com/o/subject%2Fimages.jpg?alt=media&token=3a69e80d-406e-46d3-95ce-a9f5aaafd409"),
                           ))),
