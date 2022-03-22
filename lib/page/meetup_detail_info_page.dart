@@ -225,7 +225,7 @@ class MeetupDetailPage extends StatelessWidget {
                             Title(
                                 color: Colors.black,
                                 child: Text(
-                                  getSlot(meetingInfo.slot!),
+                                  getSlot(meetingInfo.slot!) ?? "",
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontFamily: "Roboto",

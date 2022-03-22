@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mentor_coclen/apis/apiService.dart';
 import 'package:mentor_coclen/constants.dart';
@@ -80,8 +81,9 @@ class _MeetupDetailMainPageState extends State<MeetupDetailMainPage> {
   @override
   void initState() {
     super.initState();
+    FirebaseAuth auth = FirebaseAuth.instance;
     ApiServices.getMeetingDetailByMeetingId(
-            "I8WUeMVF3KTDcChKbCwyyUqw6g72", widget.sessionId)
+            auth.currentUser!.uid, widget.sessionId)
         .then((value) => {
               if (value != null)
                 {
