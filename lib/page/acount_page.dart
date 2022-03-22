@@ -5,13 +5,9 @@ import 'package:mentor_coclen/apis/apiService.dart';
 import 'package:mentor_coclen/constants.dart';
 import 'package:mentor_coclen/model/account.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:mentor_coclen/model/mentor.dart';
 
-enum ButtonSetting {
-  account,
-  nofi,
-  history,
-  logout
-}
+enum ButtonSetting { account, nofi, history, logout }
 const Map<ButtonSetting, String> btnSetting = {
   ButtonSetting.account: 'Tài khoản',
   ButtonSetting.nofi: 'Thông báo',
@@ -36,10 +32,12 @@ class _AccountPage extends State<AccountPage> {
 
   FirebaseFirestore db = FirebaseFirestore.instance;
   FirebaseAuth auth = FirebaseAuth.instance;
+  String image = "";
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    getProfileByUsername(auth.currentUser!.uid);
   }
 
   void onClick(item) async {
@@ -86,6 +84,20 @@ class _AccountPage extends State<AccountPage> {
     // }
   }
 
+  getProfileByUsername(String username) {
+    MentorModel user;
+    ApiServices.getProfileByUsername(username).then((value) => {
+          if (value != null)
+            {
+              setState(() {
+                user = value;
+
+                image = user.image.toString();
+              })
+            }
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -116,7 +128,7 @@ class _AccountPage extends State<AccountPage> {
                         child: CircleAvatar(
                           radius: 45, // Image radius
                           backgroundImage: NetworkImage(
-                              "https://pixel.nymag.com/imgs/daily/vulture/2017/06/14/14-tom-cruise.w700.h700.jpg"),
+                              image),
                         ),
                       )),
                   Expanded(

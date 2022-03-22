@@ -55,7 +55,9 @@ class _RequestMeetup extends State<RequestMeetup> {
                 color: Colors.white,
                 size: 28,
               ),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(context, "/notification");
+              },
             ),
           ],
         ),

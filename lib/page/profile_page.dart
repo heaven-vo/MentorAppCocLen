@@ -1,5 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mentor_coclen/apis/apiService.dart';
 import 'package:mentor_coclen/constants.dart';
+import 'package:mentor_coclen/model/mentor.dart';
+import 'package:mentor_coclen/model/user.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -21,6 +25,7 @@ class _ProfilePage extends State<ProfilePage> {
   TextEditingController _address = TextEditingController();
   TextEditingController _date = TextEditingController();
   String _sex = "";
+  String image = "";
   String _major = '';
   List<String> listSex = ["Nam", "Nữ", "Khác"];
   // List<MajorModel> listMajor = [];
@@ -71,28 +76,31 @@ class _ProfilePage extends State<ProfilePage> {
   }
 
   getProfileByUsername(String username) {
-    // UserModel user;
-    // ApiServices.getProfileByUsername(username).then((value) => {
-    //       if (value != null)
-    //         {
-    //           setState(() {
-    //             user = value;
-    //             _name.text = user.fullname.toString();
-    //             _phone.text = user.phone.toString();
-    //             _address.text = user.address.toString();
-    //             _date.text = user.birthday.toString();
-    //             _major = user.majorName.toString();
-    //             _sex = user.sex.toString();
-    //           })
-    //         }
-    //     });
+    MentorModel user;
+    ApiServices.getProfileByUsername(username).then((value) => {
+          if (value != null)
+            {
+              setState(() {
+                user = value;
+                print(user.fullname);
+                _email.text = auth.currentUser!.email.toString();
+                _name.text = user.fullname.toString();
+                _phone.text = user.phone.toString();
+                _address.text = user.address.toString();
+                _date.text = user.birthday.toString();
+                _major = user.listMajor![0].toString();
+                image = user.image.toString();
+              })
+            }
+        });
   }
 
+  FirebaseAuth auth = FirebaseAuth.instance;
   @override
   void initState() {
     super.initState();
     getListMajor();
-    getProfileByUsername("hoangthai@gmail.com");
+    getProfileByUsername(auth.currentUser!.uid);
   }
 
   @override
@@ -138,7 +146,7 @@ class _ProfilePage extends State<ProfilePage> {
                             child: CircleAvatar(
                               radius: 60, // Image radius
                               backgroundImage: NetworkImage(
-                                  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4j5EsloB48DnxRWOYQKJxT01dGj6cVFEDPQ&usqp=CAU"),
+                                  image),
                             )),
                         Positioned(
                             left: MediaQuery.of(context).size.width * 0.5 + 10,
@@ -240,41 +248,41 @@ class _ProfilePage extends State<ProfilePage> {
                         labelStyle: TextStyle(color: MaterialColors.primary),
                       ),
                     ),
-                    FormField<String>(builder: (FormFieldState<String> state) {
-                      return InputDecorator(
-                        decoration: InputDecoration(
-                            labelText: 'Giới tính',
-                            errorStyle: TextStyle(fontSize: 14.0, height: 0.1),
-                            icon: Icon(
-                              Icons.female,
-                              size: 28,
-                              color: MaterialColors.primary,
-                            )),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton<String>(
-                            isExpanded: true,
-                            value: _sex == '' ? null : _sex,
-                            isDense: true,
-                            onChanged: (value) {
-                              setState(() {
-                                _sex = value!;
-                                if (value.isEmpty) {
-                                  valid = false;
-                                } else {
-                                  valid = true;
-                                }
-                              });
-                            },
-                            items: listSex.map((value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                          ),
-                        ),
-                      );
-                    }),
+                    // FormField<String>(builder: (FormFieldState<String> state) {
+                    //   return InputDecorator(
+                    //     decoration: InputDecoration(
+                    //         labelText: 'Giới tính',
+                    //         errorStyle: TextStyle(fontSize: 14.0, height: 0.1),
+                    //         icon: Icon(
+                    //           Icons.female,
+                    //           size: 28,
+                    //           color: MaterialColors.primary,
+                    //         )),
+                    //     child: DropdownButtonHideUnderline(
+                    //       child: DropdownButton<String>(
+                    //         isExpanded: true,
+                    //         value: _sex == '' ? null : _sex,
+                    //         isDense: true,
+                    //         onChanged: (value) {
+                    //           setState(() {
+                    //             _sex = value!;
+                    //             if (value.isEmpty) {
+                    //               valid = false;
+                    //             } else {
+                    //               valid = true;
+                    //             }
+                    //           });
+                    //         },
+                    //         items: listSex.map((value) {
+                    //           return DropdownMenuItem<String>(
+                    //             value: value,
+                    //             child: Text(value),
+                    //           );
+                    //         }).toList(),
+                    //       ),
+                    //     ),
+                    //   );
+                    // }),
                     // FormField<String>(builder: (FormFieldState<String> state) {
                     //   return InputDecorator(
                     //     decoration: InputDecoration(

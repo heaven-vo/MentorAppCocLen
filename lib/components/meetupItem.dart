@@ -23,6 +23,7 @@ class MeetupItem extends StatefulWidget {
 
 class _MeetupItem extends State<MeetupItem> {
   FirebaseAuth auth = FirebaseAuth.instance;
+
   cancelRequest() {
     EasyLoading.show(
       status: 'loading...',
@@ -32,12 +33,148 @@ class _MeetupItem extends State<MeetupItem> {
             widget.meetup.sessionId!, auth.currentUser!.uid)
         .then((value) => {
               if (value != null)
-                {print(value), EasyLoading.dismiss(), widget.function("")}
+                {
+                  print(value),
+                  EasyLoading.dismiss(),
+                  widget.function(""),
+                }
               else
                 {EasyLoading.dismiss(), widget.function("")}
             });
 
     // EasyLoading.dismiss();
+  }
+
+  int val = -1;
+
+  dialogCancel() {
+    return showDialog(
+        context: context,
+        builder: (build) {
+          return StatefulBuilder(builder: (context, setState) {
+            return AlertDialog(
+              title: Text("Hủy Meetup", textAlign: TextAlign.center),
+              content: SingleChildScrollView(
+                child: Column(children: [
+                  ListTile(
+                    title: Text("Có việc bận đột xuất!"),
+                    leading: Radio(
+                      value: 1,
+                      groupValue: val,
+                      onChanged: (value) {
+                        setState(() {
+                          val = int.parse(value.toString());
+                        });
+                      },
+                      activeColor: Colors.green,
+                    ),
+                  ),
+                  ListTile(
+                    title: Text("Thành viên trong nhóm quá ít!"),
+                    leading: Radio(
+                      value: 2,
+                      groupValue: val,
+                      onChanged: (value) {
+                        setState(() {
+                          val = int.parse(value.toString());
+                        });
+                      },
+                      activeColor: Colors.green,
+                    ),
+                  ),
+                  ListTile(
+                    title: Text("Lý do khác:"),
+                    leading: Radio(
+                      value: 3,
+                      groupValue: val,
+                      onChanged: (value) {
+                        setState(() {
+                          val = int.parse(value.toString());
+                        });
+                      },
+                      activeColor: Colors.green,
+                    ),
+                  ),
+                  if (val == 3) ...[
+                    Container(
+                        height: 100,
+                        child: Card(
+                            color: Colors.white60,
+                            child: Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: TextField(
+                                maxLines: 8,
+                                onChanged: (value) {
+                                  setState(() {});
+                                },
+                                decoration: InputDecoration.collapsed(
+                                    hintStyle: TextStyle(
+                                        fontFamily: "Roboto",
+                                        fontSize: 14,
+                                        color: Colors.black.withOpacity(0.4)),
+                                    hintText: "Nhập lý do của bạn."),
+                              ),
+                            )))
+                  ]
+                ]),
+              ),
+              actions: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    FlatButton(
+                        height: 40,
+                        color: MaterialColors.primary,
+                        onPressed: () {
+                          Navigator.pop(build);
+                          EasyLoading.show(
+                            status: 'loading...',
+                            maskType: EasyLoadingMaskType.clear,
+                          );
+
+                          cancelRequest();
+                        },
+                        shape: RoundedRectangleBorder(
+                          side: BorderSide(
+                              color: MaterialColors.primary, width: 1),
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: Text(
+                          "   Xác nhận  ",
+                          style: TextStyle(
+                              fontSize: 16.0,
+                              fontFamily: "Roboto",
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500),
+                        )),
+                    SizedBox(
+                      width: 30,
+                    ),
+                    FlatButton(
+                        height: 40,
+                        shape: RoundedRectangleBorder(
+                          side: BorderSide(
+                              color: MaterialColors.primary, width: 1),
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        color: Colors.white,
+                        onPressed: () {
+                          Navigator.pop(build);
+                        },
+                        child: Text(
+                          "    Hủy bỏ     ",
+                          style: TextStyle(
+                              fontSize: 16.0,
+                              fontFamily: "Roboto",
+                              color: MaterialColors.primary,
+                              fontWeight: FontWeight.w500),
+                        ))
+                  ],
+                )
+              ],
+            );
+          });
+        });
   }
 
   acceptRequest() {
@@ -321,7 +458,7 @@ class _MeetupItem extends State<MeetupItem> {
                                 color: Colors.white,
                                 textColor: MaterialColors.primary,
                                 onPressed: () {
-                                  cancelRequest();
+                                  dialogCancel();
                                 },
                               ),
                             ),
@@ -366,7 +503,10 @@ class _MeetupItem extends State<MeetupItem> {
                                 ),
                                 color: MaterialColors.primary,
                                 textColor: Colors.white,
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.pushNamed(context, "/meetup-detail",
+                                      arguments: widget.meetup.sessionId);
+                                },
                               ),
                             ),
                           ]

@@ -1,13 +1,6 @@
 import 'dart:collection';
 
-const SLOT = [
-  "07:00 - 08:30",
-  "08:45 - 10:15",
-  "10:30 - 12:00",
-  "12:30 - 14:00",
-  "14:15 - 15:45",
-  "16:30 - 17:30"
-]; //generate String major from list major
+//generate String major from list major
 getMajorString(List majorList) {
   var majors = "";
 
@@ -21,6 +14,14 @@ getMajorString(List majorList) {
   return majors;
 }
 
+const SLOT = [
+  "07:00 - 08:30",
+  "08:45 - 10:15",
+  "10:30 - 12:00",
+  "12:30 - 14:00",
+  "14:15 - 15:45",
+  "16:00 - 17:30"
+]; //
 getSlot(int slot) {
   switch (slot) {
     case 1:

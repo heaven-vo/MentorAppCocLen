@@ -3,6 +3,9 @@ import 'dart:convert' as convert;
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:mentor_coclen/model/meetup.dart';
+import 'package:mentor_coclen/model/mentor.dart';
+import 'package:mentor_coclen/model/nofication.dart';
+import 'package:mentor_coclen/model/user.dart';
 
 class ApiServices {
   static const baseURL = 'https://theweekendexpertise.azurewebsites.net/api/v1';
@@ -38,6 +41,27 @@ class ApiServices {
         return listMeeting;
       } else if (response.statusCode == 404) {
         List<MeetupModel> list = [];
+        return list;
+      }
+    } catch (e) {
+      print('Error with status code: ${e}');
+    }
+  }
+
+  static Future<dynamic> getListNotification(
+      String userId, int page, int limit) async {
+    try {
+      var response = await http.get(
+        Uri.parse(
+            '${baseURL}/Notification/${userId}?pageIndex=${page}&pageSize=${limit}'),
+      );
+      if (response.statusCode == 200) {
+        List<dynamic> body = convert.jsonDecode(response.body);
+        List<NoficationModel> list =
+            body.map((dynamic item) => NoficationModel.fromJson(item)).toList();
+        return list;
+      } else if (response.statusCode == 404) {
+        List<NoficationModel> list = [];
         return list;
       }
     } catch (e) {
@@ -114,6 +138,48 @@ class ApiServices {
     }
   }
 
+  static Future<dynamic> putCancelMeetup(
+      String meetupId, String memberId) async {
+    //12c9cd48-8cb7-4145-8fd9-323e20b329dd
+    try {
+      Map<String, String> headers = {"Content-type": "application/json"};
+      var response = await http.put(
+        Uri.parse(
+          '${baseURL}/session-management/${meetupId}/user/${memberId}/Cancel',
+        ),
+        headers: headers,
+      );
+      print(response.statusCode);
+      if (response.statusCode == 200) {
+        String body = "Successfull";
+
+        return body;
+      } else if (response.statusCode == 404 || response.statusCode == 409) {
+        return null;
+      }
+    } catch (e) {
+      print('Error with status code: ${e}');
+    }
+  }
+
+  static Future<dynamic> getProfileByUsername(String username) async {
+    var user = Completer<MentorModel>();
+
+    var body;
+    try {
+      var response = await http.get(
+        Uri.parse('${baseURL}/mentors/${username}'),
+      );
+      body = convert.jsonDecode(response.body);
+      user.complete(MentorModel.fromJson(body['data']));
+    } catch (_) {
+      user.complete(MentorModel.fromJson(body));
+    } on SocketException {
+      print("Fail to connect API!");
+    }
+    return user.future;
+  }
+
   static Future<dynamic> putCancelMeetupRequest(
       String sessionId, String mentorId) async {
     //12c9cd48-8cb7-4145-8fd9-323e20b329dd
@@ -126,7 +192,7 @@ class ApiServices {
         headers: headers,
       );
       print(response.statusCode);
-      if (response.statusCode == 204 ||response.statusCode == 200) {
+      if (response.statusCode == 204 || response.statusCode == 200) {
         String body = response.body;
 
         return body;
@@ -137,6 +203,7 @@ class ApiServices {
       print('Error with status code: ${e}');
     }
   }
+
   static Future<dynamic> putAcceptMeetupRequest(
       String sessionId, String mentorId) async {
     //12c9cd48-8cb7-4145-8fd9-323e20b329dd
@@ -150,7 +217,7 @@ class ApiServices {
         headers: headers,
       );
       print(response.statusCode);
-      if (response.statusCode == 204 ||response.statusCode == 200) {
+      if (response.statusCode == 204 || response.statusCode == 200) {
         String body = response.body;
 
         return body;

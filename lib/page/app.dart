@@ -24,9 +24,9 @@ class AppState extends State<App> {
 
   final _navigatorKeys = {
     TabItem.home: GlobalKey<NavigatorState>(),
-    TabItem.assignment_rounded: GlobalKey<NavigatorState>(),
     TabItem.assignment_turned_in_outlined: GlobalKey<NavigatorState>(),
-    TabItem.account: GlobalKey<NavigatorState>(),
+    TabItem.assignment_rounded: GlobalKey<NavigatorState>(),
+    TabItem.account_box_outlined: GlobalKey<NavigatorState>(),
   };
 
   void _selectTab(TabItem tabItem) {
@@ -102,8 +102,8 @@ class AppState extends State<App> {
   Widget build(BuildContext context) {
     List<Widget> _widgetOptions = <Widget>[
       HomePage(),
-      MEETUP_ACCEPT(),
       RequestMeetup(),
+      MEETUP_ACCEPT(),
       AccountPage()
     ];
 
@@ -145,21 +145,21 @@ class AppState extends State<App> {
 
 enum TabItem {
   home,
-  assignment_rounded,
   assignment_turned_in_outlined,
-  account
+  assignment_rounded,
+  account_box_outlined
 }
 
 const Map<TabItem, String> tabName = {
   TabItem.home: 'Trang chủ',
-  TabItem.assignment_rounded: 'Mentup',
   TabItem.assignment_turned_in_outlined: 'Yêu Cầu',
-  TabItem.account: 'Cài đặt',
+  TabItem.assignment_rounded: 'Lịch hẹn',
+  TabItem.account_box_outlined: 'Cá nhân',
 };
 
 const Map<TabItem, IconData> tabIcon = {
   TabItem.home: Icons.home,
-  TabItem.assignment_rounded: Icons.assignment_rounded,
   TabItem.assignment_turned_in_outlined: Icons.assignment_turned_in_outlined,
-  TabItem.account: Icons.settings,
+  TabItem.assignment_rounded: Icons.assignment_rounded,
+  TabItem.account_box_outlined: Icons.account_box_outlined,
 };
