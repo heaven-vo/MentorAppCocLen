@@ -41,9 +41,9 @@ class _MenuFooter extends State<MenuFooter> {
       selectedItemColor: MaterialColors.primary,
       items: [
         _buildItem(TabItem.home),
-        _buildNofication(TabItem.assignment_rounded),
         _buildItem(TabItem.assignment_turned_in_outlined),
-        _buildItem(TabItem.account),
+        _buildNofication(TabItem.assignment_rounded),
+        _buildItem(TabItem.account_box_outlined),
       ],
       onTap: (index) => widget.onSelectTab(
         TabItem.values[index],
